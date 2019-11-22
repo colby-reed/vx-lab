@@ -1,0 +1,39 @@
+
+###############
+# L2VNIs
+###############
+
+{% for vlan in vlans %}
+auto vni300{{ vlan }}
+iface vni300{{ vlan }}
+    bridge-access {{ vlan }}
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 300{{ vlan }}
+
+{% endfor %}
+
+###############
+# L3VNIs
+###############
+{% for vrf in vrfs %}
+auto L3VNI_{{ vrf }}
+iface L3VNI_{{ vrf }}
+    bridge-access {{ vrfs[vrf] }}
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 300{{ vrfs[vrf] }}
+
+auto vlan{{ vrfs[vrf] }}
+iface vlan{{ vrfs[vrf] }}
+    vlan-id {{ vrfs[vrf] }}
+    vlan-raw-device bridge
+    ip-forward off
+    ip6-forward off
+    vrf {{ vrf }}
+
+{% endfor %}

@@ -1,0 +1,28 @@
+
+###############
+# Clag Bonds
+###############
+
+{% for bond in racks[devices[inventory_hostname].rack].clag.bonds %}
+auto bond{{ bond.interface[3:] }}
+iface bond{{ bond.interface[3:] }}
+{%   if bond.access is defined %}
+    bridge-access {{ bond.access }}
+{%   endif %}
+{%   if bond.trunk is defined %}
+{%     if bond.trunk.tagged is defined %}
+    bridge-vids {{ bond.trunk.tagged | join(' ') }}
+{%     endif %}
+{%     if bond.trunk.untagged is defined %}
+    bridge-pvid {{ bond.trunk.untagged }}
+{%     endif %}
+{%   endif %}
+    bond-slaves {{ bond.interface }}
+    clag-id {{ bond.interface[3:] }}
+    bond-lacp-bypass-allow yes
+
+auto {{ bond.interface }}
+iface {{ bond.interface }}
+    alias bond member of bond{{ bond.interface[3:] }}
+
+{% endfor %}

@@ -1,0 +1,81 @@
+---
+stages:
+  - lint
+  - prep simulation environment
+  - build the simulation
+  - provision netq
+  - provision the simulation
+  - test the simulation
+  - cleanup the simulation
+
+lint:
+  stage: lint
+  script:
+    - bash ./tests/linter.sh
+
+prep:
+  stage: prep simulation environment
+  script:
+    - bash ./tests/prep.sh
+  only:
+    - /^dev.*$/
+
+build:
+  stage: build the simulation
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  artifacts:
+    expire_in: 1 week
+    untracked: true
+    paths:
+      - cldemo2/simulation/
+      - cldemo2/simulation/.vagrant/
+
+  script:
+    - bash ./tests/bring-up-sim.sh
+  only:
+    - /^dev.*$/
+
+provision-netq:
+  stage: provision netq
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./tests/provision-opta-outside.sh
+  only:
+    - /^dev.*$/
+  dependencies:
+    - build
+
+provision:
+  stage: provision the simulation
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./tests/provision-sim-outside.sh
+  only:
+    - /^dev.*$/
+  dependencies:
+    - build
+
+test:
+  stage: test the simulation
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./tests/test-sim-outside.sh
+  only:
+    - /^dev.*$/
+  dependencies:
+    - build
+
+cleanup:
+  stage: cleanup the simulation
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./tests/cleanup.sh
+  only:
+    - /^dev.*$/
+  dependencies:
+    - build

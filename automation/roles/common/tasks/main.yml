@@ -1,0 +1,16 @@
+---
+- name: Include common roles
+  include_role:
+    name: '{{ item }}'
+    apply:
+      tags:
+        - '{{ item }}'
+  with_items:
+    - hostname
+    - motd
+    - dns
+    - ssh
+    - ptm
+    - snmp
+    - syslog
+    - time

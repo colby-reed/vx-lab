@@ -1,0 +1,133 @@
+# Ansible Managed File
+
+
+###############
+# Loopback
+###############
+
+auto lo
+iface lo inet loopback
+    address 10.10.10.63/32
+    clagd-vxlan-anycast-ip 10.0.1.254
+
+###############
+# Mgmt interface
+###############
+
+auto mgmt
+iface mgmt
+    vrf-table auto
+    address 127.0.0.1/8
+
+auto eth0
+iface eth0 inet dhcp
+    vrf mgmt
+###############
+# Clag Bonds
+###############
+
+auto bond3
+iface bond3
+    bridge-vids 10 20
+    bond-slaves swp3
+    clag-id 3
+    bond-lacp-bypass-allow yes
+
+auto swp3
+iface swp3
+    alias bond member of bond3
+
+
+###############
+# L2VNIs
+###############
+
+auto vni30010
+iface vni30010
+    bridge-access 10
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 30010
+    vxlan-local-tunnelip 10.10.10.63
+
+auto vlan10
+iface vlan10
+    vlan-id 10
+    vlan-raw-device bridge
+    ip-forward off
+    ip6-forward off
+
+auto vni30020
+iface vni30020
+    bridge-access 20
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 30020
+    vxlan-local-tunnelip 10.10.10.63
+
+auto vlan20
+iface vlan20
+    vlan-id 20
+    vlan-raw-device bridge
+    ip-forward off
+    ip6-forward off
+
+
+###############
+# Fabric Links
+###############
+
+auto swp25
+iface swp25
+    alias fabric link
+
+auto swp26
+iface swp26
+    alias fabric link
+
+auto swp27
+iface swp27
+    alias fabric link
+
+auto swp28
+iface swp28
+    alias fabric link
+
+
+###############
+# Mlag and peerlink
+###############
+
+auto swp20
+iface swp20
+    alias peerlink
+
+auto swp21
+iface swp21
+    alias peerlink
+
+
+auto peerlink
+iface peerlink
+    bond-slaves swp20 swp21 
+auto peerlink.4094
+iface peerlink.4094
+    clagd-backup-ip 10.10.10.64
+    clagd-peer-ip linklocal
+    clagd-priority 1000
+    clagd-sys-mac 44:38:39:FF:FF:FF
+###############
+# Bridge
+###############
+
+auto bridge
+iface bridge
+    bridge-ports peerlink \
+                 bond3  \
+                 vni30010 vni30020 
+    bridge-vids 10 20 
+    bridge-vlan-aware yes

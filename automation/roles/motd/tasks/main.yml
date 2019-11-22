@@ -1,0 +1,10 @@
+---
+- name: Set MOTD
+  template:
+    src: motd.j2
+    dest: /etc/motd
+
+- name: Set pre login banner
+  copy:
+    src: banner
+    dest: /etc/issue.net

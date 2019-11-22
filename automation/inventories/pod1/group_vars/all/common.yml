@@ -1,0 +1,76 @@
+---
+fabric_name: pod1
+vlans:
+  - 10
+  - 20
+  - 30
+vrfs:
+  RED: 4001
+  BLUE: 4002
+racks:
+  01:
+    bgp:
+      asn: 65101
+    clag:
+      loopback: 10.0.1.1
+      sysmac: 44:38:39:FF:01:01
+      bonds:
+        - interface: swp1
+          access: 10
+        - interface: swp2
+          access: 20
+        - interface: swp3
+          access: 30
+    vrr:
+      10:
+        ipv4: 10.1.10.1/24
+        mac: 00:00:00:00:00:1a
+      20:
+        ipv4: 10.1.20.1/24
+        mac: 00:00:00:00:00:1b
+      30:
+        ipv4: 10.1.30.1/24
+        mac: 00:00:00:00:00:1c
+  02:
+    bgp:
+      asn: 65102
+    clag:
+      loopback: 10.0.1.2
+      sysmac: 44:38:39:FF:01:02
+      bonds:
+        - interface: swp1
+          access: 10
+        - interface: swp2
+          access: 20
+        - interface: swp3
+          access: 30
+    vrr:
+      10:
+        ipv4: 10.1.10.1/24
+        mac: 00:00:00:00:00:1a
+      20:
+        ipv4: 10.1.20.1/24
+        mac: 00:00:00:00:00:1b
+      30:
+        ipv4: 10.1.30.1/24
+        mac: 00:00:00:00:00:1c
+  32:
+    bgp:
+      asn: 65254
+    clag:
+      loopback: 10.0.1.254
+      sysmac: 44:38:39:FF:FF:FF
+      bonds:
+        - interface: swp3
+          trunk:
+            tagged: [10, 20, 30]
+    vrr:
+      10:
+        ipv4: 10.1.10.1/24
+        mac: 00:00:00:00:00:1a
+      20:
+        ipv4: 10.1.20.1/24
+        mac: 00:00:00:00:00:1b
+      30:
+        ipv4: 10.1.30.1/24
+        mac: 00:00:00:00:00:1c

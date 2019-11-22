@@ -1,0 +1,8 @@
+---
+- name: Disable reverse DNS name lookup for logins via SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^UseDNS'
+    line: 'UseDNS no'
+  notify:
+    - restart sshd

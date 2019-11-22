@@ -1,0 +1,11 @@
+
+###############
+# Fabric Links
+###############
+
+{% for interface in fabric_links %}
+auto {{ interface }}
+iface {{ interface }}
+    alias fabric link
+
+{% endfor %}

@@ -1,0 +1,51 @@
+# Ansible Managed File
+
+
+###############
+# Loopback
+###############
+
+auto lo
+iface lo inet loopback
+    address 10.10.10.101/32
+
+###############
+# Mgmt interface
+###############
+
+auto mgmt
+iface mgmt
+    vrf-table auto
+    address 127.0.0.1/8
+
+auto eth0
+iface eth0 inet dhcp
+    vrf mgmt
+###############
+# Fabric Links
+###############
+
+auto swp1
+iface swp1
+    alias fabric link
+
+auto swp2
+iface swp2
+    alias fabric link
+
+auto swp3
+iface swp3
+    alias fabric link
+
+auto swp4
+iface swp4
+    alias fabric link
+
+auto swp5
+iface swp5
+    alias fabric link
+
+auto swp6
+iface swp6
+    alias fabric link
+

@@ -1,0 +1,63 @@
+---
+switch_role: leaf
+peerlinks:
+  - swp49
+  - swp50
+fabric_links:
+  - swp51
+  - swp52
+  - swp53
+  - swp54
+devices:
+  leaf01:
+    rack: 01
+    loopback: 10.10.10.1/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.2/24
+      20:
+        vrf: RED
+        ipv4: 10.1.20.2/24
+      30:
+        vrf: BLUE
+        ipv4: 10.1.30.2/24
+  leaf02:
+    rack: 01
+    loopback: 10.10.10.2/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.3/24
+      20:
+        vrf: BLUE
+        ipv4: 10.1.20.3/24
+      30:
+        vrf: BLUE
+        ipv4: 10.1.30.3/24
+  leaf03:
+    rack: 02
+    loopback: 10.10.10.3/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.2/24
+      20:
+        vrf: BLUE
+        ipv4: 10.1.20.2/24
+      30:
+        vrf: BLUE
+        ipv4: 10.1.30.2/24
+  leaf04:
+    rack: 02
+    loopback: 10.10.10.4/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.3/24
+      20:
+        vrf: BLUE
+        ipv4: 10.1.20.3/24
+      30:
+        vrf: BLUE
+        ipv4: 10.1.30.3/24

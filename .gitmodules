@@ -1,0 +1,3 @@
+[submodule "cldemo2"]
+	path = cldemo2
+	url = https://gitlab.com/cumulus-consulting/goldenturtle/cldemo2

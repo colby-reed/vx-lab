@@ -1,0 +1,16 @@
+
+###############
+# Bridge
+###############
+
+auto bridge
+iface bridge
+    bridge-ports peerlink \
+                 {% for bond in racks[devices[inventory_hostname].rack].clag.bonds %}bond{{ bond.interface[3:] }} {% endfor %} \
+                 {% for vlan in vlans %}vni300{{ vlan }} {% endfor %} \
+                 {% for vrf in vrfs %}L3VNI_{{ vrf }} {% endfor %}
+
+    bridge-vids {% for vlan in vlans %}{{ vlan }} {% endfor %} \
+                 {% for vrf in vrfs %}{{ vrfs[vrf] }} {% endfor %}
+
+    bridge-vlan-aware yes

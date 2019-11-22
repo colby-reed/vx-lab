@@ -1,0 +1,31 @@
+---
+switch_role: border
+peerlinks:
+  - swp49
+  - swp50
+fabric_links:
+  - swp51
+  - swp52
+  - swp53
+  - swp54
+devices:
+  border01:
+    rack: 32
+    loopback: 10.10.10.63/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.2/24
+      20:
+        vrf: BLUE
+        ipv4: 10.1.20.2/24
+  border02:
+    rack: 32
+    loopback: 10.10.10.64/32
+    svis:
+      10:
+        vrf: RED
+        ipv4: 10.1.10.3/24
+      20:
+        vrf: BLUE
+        ipv4: 10.1.20.3/24

@@ -1,0 +1,20 @@
+---
+- hosts: spine leaf border
+  become: yes
+  roles:
+    - { role: common, tags: ['common'] }
+    - { role: interfaces, tags: ['interfaces'] }
+    - { role: frr, tags: ['frr'] }
+    - { role: backup, tags: ['backup'] }
+
+- hosts: fw
+  become: yes
+  roles:
+    - { role: firewalls, tags: ['fw'] }
+    - { role: backup, tags: ['backup'] }
+
+- hosts: host
+  become: yes
+  roles:
+    - { role: servers, tags: ['servers'] }
+    - { role: backup, tags: ['backup'] }

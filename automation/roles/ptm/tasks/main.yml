@@ -1,0 +1,9 @@
+---
+- name: Configure ptmd from local topology.dot
+  copy:
+    src: topology.dot
+    dest: /etc/ptm.d/topology.dot
+  notify:
+    - restart ptmd
+
+- meta: flush_handlers

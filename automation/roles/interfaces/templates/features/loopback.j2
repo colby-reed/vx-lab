@@ -1,0 +1,12 @@
+
+###############
+# Loopback
+###############
+
+auto lo
+iface lo inet loopback
+    address {{ devices[inventory_hostname].loopback }}
+{% if devices[inventory_hostname].rack is defined %}
+    clagd-vxlan-anycast-ip {{ racks[devices[inventory_hostname].rack].clag.loopback }}
+{% endif %}
+	vxlan-local-tunnelip {{ devices[inventory_hostname].loopback|ipaddr('address')}}

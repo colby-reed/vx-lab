@@ -1,0 +1,27 @@
+{{ ansible_managed }}
+frr defaults datacenter
+hostname {{ inventory_hostname }}
+username cumulus nopassword
+!
+service integrated-vtysh-config
+!
+log syslog informational
+!
+router bgp {{ spine_asn }}
+ bgp router-id {{ devices[inventory_hostname].loopback|ipaddr('address') }}
+ neighbor underlay peer-group
+ neighbor underlay remote-as external
+{% for interface in fabric_links %}
+ neighbor {{ interface }} interface peer-group underlay
+{% endfor %}
+ !
+ address-family ipv4 unicast
+  redistribute connected
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor underlay activate
+ exit-address-family
+!
+line vty
+!

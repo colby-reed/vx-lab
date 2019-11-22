@@ -1,0 +1,15 @@
+
+###############
+# SVI
+###############
+{% for svi in devices[inventory_hostname].svis %}
+auto vlan{{ svi }}
+iface vlan{{ svi }}
+    address {{ devices[inventory_hostname].svis[svi].ipv4 }}
+    address-virtual {{ racks[devices[inventory_hostname].rack].vrr[svi].mac }} {{ racks[devices[inventory_hostname].rack].vrr[svi].ipv4 }}
+{% if devices[inventory_hostname].svis[svi].vrf is defined %}
+    vrf {{ devices[inventory_hostname].svis[svi].vrf }}
+{% endif %}
+    vlan-raw-device bridge
+    vlan-id {{ svi }}
+{% endfor %}

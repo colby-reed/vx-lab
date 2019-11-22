@@ -1,0 +1,19 @@
+---
+switch_role: spine
+spine_asn: 65199
+fabric_links:
+  - swp1
+  - swp2
+  - swp3
+  - swp4
+  - swp5
+  - swp6
+devices:
+  spine01:
+    loopback: 10.10.10.101/32
+  spine02:
+    loopback: 10.10.10.102/32
+  spine03:
+    loopback: 10.10.10.103/32
+  spine04:
+    loopback: 10.10.10.104/32
