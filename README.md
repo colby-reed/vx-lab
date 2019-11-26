@@ -88,7 +88,7 @@ ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
 The playbooks have the following important structure:
 * Variables and inventories are stored in the same directory `automation/inventories/pod1/group_vars/`
 * Backup configurations are stored in `automation/playbooks/configs/`
-
+<!-- AIR:tour -->
 ## Validate
 
 ### Server to Server connectivity
@@ -330,7 +330,7 @@ Route Distinguisher: 10.10.10.4:6
                     10.0.1.2                               0 65199 65102 i
                     RT:65102:30010 RT:65102:3004001 ET:8 Rmac:4e:98:e0:81:97:d5
 ```
-
+<!-- AIR:tour -->
 ## Advanced Options
 
 ### Vagrant
