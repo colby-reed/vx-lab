@@ -1,0 +1,198 @@
+# Ansible Managed File
+
+
+###############
+# Loopback
+###############
+
+auto lo
+iface lo inet loopback
+    address 10.10.10.64/32
+    clagd-vxlan-anycast-ip 10.0.1.254
+	vxlan-local-tunnelip 10.10.10.64
+###############
+# Mgmt interface
+###############
+
+auto mgmt
+iface mgmt
+    vrf-table auto
+    address 127.0.0.1/8
+
+auto eth0
+iface eth0 inet dhcp
+    vrf mgmt
+###############
+# VRFs
+###############
+
+auto RED
+iface RED
+  vrf-table auto
+
+auto BLUE
+iface BLUE
+  vrf-table auto
+
+
+###############
+# Clag Bonds
+###############
+
+auto bond3
+iface bond3
+    bridge-vids 10 20 30
+    bond-slaves swp3
+    clag-id 3
+    bond-lacp-bypass-allow yes
+
+auto swp3
+iface swp3
+    alias bond member of bond3
+
+
+###############
+# L2VNIs
+###############
+
+auto vni30010
+iface vni30010
+    bridge-access 10
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 30010
+
+auto vni30020
+iface vni30020
+    bridge-access 20
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 30020
+
+auto vni30030
+iface vni30030
+    bridge-access 30
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 30030
+
+
+###############
+# L3VNIs
+###############
+auto L3VNI_RED
+iface L3VNI_RED
+    hwaddress 44:38:39:00:00:32
+    bridge-access 4001
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 3004001
+
+auto vlan4001
+iface vlan4001
+    vlan-id 4001
+    vlan-raw-device bridge
+    ip-forward off
+    ip6-forward off
+    vrf RED
+
+auto L3VNI_BLUE
+iface L3VNI_BLUE
+    hwaddress 44:38:39:00:00:32
+    bridge-access 4002
+    bridge-arp-nd-suppress on
+    bridge-learning off
+    mstpctl-bpduguard yes
+    mstpctl-portbpdufilter yes
+    vxlan-id 3004002
+
+auto vlan4002
+iface vlan4002
+    vlan-id 4002
+    vlan-raw-device bridge
+    ip-forward off
+    ip6-forward off
+    vrf BLUE
+
+
+###############
+# Fabric Links
+###############
+
+auto swp51
+iface swp51
+    alias fabric link
+
+auto swp52
+iface swp52
+    alias fabric link
+
+auto swp53
+iface swp53
+    alias fabric link
+
+auto swp54
+iface swp54
+    alias fabric link
+
+
+###############
+# Mlag and peerlink
+###############
+
+auto swp49
+iface swp49
+    alias peerlink
+
+auto swp50
+iface swp50
+    alias peerlink
+
+
+auto peerlink
+iface peerlink
+    bond-slaves swp49 swp50 
+auto peerlink.4094
+iface peerlink.4094
+    clagd-backup-ip 10.10.10.63
+    clagd-peer-ip linklocal
+    clagd-priority 32768
+    clagd-sys-mac 44:38:39:FF:FF:FF
+###############
+# Bridge
+###############
+
+auto bridge
+iface bridge
+    bridge-ports peerlink \
+                 bond3  \
+                 vni30010 vni30020 vni30030  \
+                 L3VNI_RED L3VNI_BLUE 
+    bridge-vids 10 20 30  \
+                 4001 4002 
+    bridge-vlan-aware yes
+###############
+# SVI
+###############
+auto vlan10
+iface vlan10
+    address 10.1.10.3/24
+    address-virtual 00:00:00:00:00:1a 10.1.10.1/24
+    vrf RED
+    vlan-raw-device bridge
+    vlan-id 10
+auto vlan20
+iface vlan20
+    address 10.1.20.3/24
+    address-virtual 00:00:00:00:00:1b 10.1.20.1/24
+    vrf BLUE
+    vlan-raw-device bridge
+    vlan-id 20
