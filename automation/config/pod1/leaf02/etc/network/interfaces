@@ -110,7 +110,6 @@ iface vni30030
 ###############
 auto L3VNI_RED
 iface L3VNI_RED
-    hwaddress 44:38:39:00:00:1
     bridge-access 4001
     bridge-arp-nd-suppress on
     bridge-learning off
@@ -120,6 +119,7 @@ iface L3VNI_RED
 
 auto vlan4001
 iface vlan4001
+    hwaddress 44:38:39:00:00:1
     vlan-id 4001
     vlan-raw-device bridge
     ip-forward off
@@ -128,7 +128,6 @@ iface vlan4001
 
 auto L3VNI_BLUE
 iface L3VNI_BLUE
-    hwaddress 44:38:39:00:00:1
     bridge-access 4002
     bridge-arp-nd-suppress on
     bridge-learning off
@@ -138,6 +137,7 @@ iface L3VNI_BLUE
 
 auto vlan4002
 iface vlan4002
+    hwaddress 44:38:39:00:00:1
     vlan-id 4002
     vlan-raw-device bridge
     ip-forward off

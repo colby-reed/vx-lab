@@ -21,7 +21,6 @@ iface vni300{{ vlan }}
 {% for vrf in vrfs %}
 auto L3VNI_{{ vrf }}
 iface L3VNI_{{ vrf }}
-    hwaddress 44:38:39:00:00:{{ devices[inventory_hostname].rack }}
     bridge-access {{ vrfs[vrf] }}
     bridge-arp-nd-suppress on
     bridge-learning off
@@ -31,6 +30,7 @@ iface L3VNI_{{ vrf }}
 
 auto vlan{{ vrfs[vrf] }}
 iface vlan{{ vrfs[vrf] }}
+    hwaddress 44:38:39:00:00:{{ devices[inventory_hostname].rack }}
     vlan-id {{ vrfs[vrf] }}
     vlan-raw-device bridge
     ip-forward off
