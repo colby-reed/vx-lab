@@ -59,7 +59,7 @@ racks:
       asn: 65254
     clag:
       loopback: 10.0.1.254
-      sysmac: 44:38:39:FF:01:FF
+      sysmac: 44:38:39:FF:FF:FF
       bonds:
         - interface: swp3
           trunk:

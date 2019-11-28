@@ -10,17 +10,13 @@ stages:
 
 lint:
   stage: lint
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/linter.sh
+    - bash ./tests/linter.sh
 
 prep:
   stage: prep simulation environment
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/prep.sh
+    - bash ./tests/prep.sh
   only:
     - /^dev.*$/
 
@@ -32,9 +28,11 @@ build:
     expire_in: 1 week
     untracked: true
     paths:
-      - simulation_$CI_PROJECT_NAME/
+      - cldemo2/simulation/
+      - cldemo2/simulation/.vagrant/
+
   script:
-    - bash ./cldemo2/ci-common/bring-up-sim.sh
+    - bash ./tests/bring-up-sim.sh
   only:
     - /^dev.*$/
 
@@ -43,7 +41,7 @@ provision-netq:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/provision-opta.sh
+    - bash ./tests/provision-opta-outside.sh
   only:
     - /^dev.*$/
   dependencies:
@@ -54,7 +52,7 @@ provision:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/provision-sim-outside.sh
+    - bash ./tests/provision-sim-outside.sh
   only:
     - /^dev.*$/
   dependencies:
@@ -65,7 +63,7 @@ test:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/test-sim-outside.sh
+    - bash ./tests/test-sim-outside.sh
   only:
     - /^dev.*$/
   dependencies:
@@ -76,9 +74,8 @@ cleanup:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/cleanup.sh
+    - bash ./tests/cleanup.sh
   only:
     - /^dev.*$/
   dependencies:
     - build
-

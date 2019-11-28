@@ -17,11 +17,8 @@ devices:
         vrf: RED
         ipv4: 10.1.10.2/24
       20:
-        vrf: RED
-        ipv4: 10.1.20.2/24
-      30:
         vrf: BLUE
-        ipv4: 10.1.30.2/24
+        ipv4: 10.1.20.2/24
   border02:
     rack: 32
     loopback: 10.10.10.64/32
@@ -30,8 +27,5 @@ devices:
         vrf: RED
         ipv4: 10.1.10.3/24
       20:
-        vrf: RED
-        ipv4: 10.1.20.3/24
-      30:
         vrf: BLUE
-        ipv4: 10.1.30.3/24
+        ipv4: 10.1.20.3/24
