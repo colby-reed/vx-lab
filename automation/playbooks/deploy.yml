@@ -13,7 +13,7 @@
     - { role: firewalls, tags: ['fw'] }
     - { role: backup, tags: ['backup'] }
 
-- hosts: server
+- hosts: host
   become: yes
   roles:
     - { role: servers, tags: ['servers'] }

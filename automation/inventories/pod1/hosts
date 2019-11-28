@@ -21,7 +21,7 @@ spine02
 spine03
 spine04
 
-[server]
+[host]
 server01
 server02
 server03
@@ -34,7 +34,7 @@ fw
 leaf
 spine
 border
-server
+host
 
 [netq]
 netq-ts

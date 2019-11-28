@@ -6,6 +6,8 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 }
+
+set -e
 set -x
 
 echo "netq show agents"
@@ -14,41 +16,20 @@ check_state
 
 echo "netq check bgp"
 netq check bgp
+#netq check bgp | grep -q "Failed Nodes: 0"
 check_state
-netq check bgp include 0
-check_state
-netq check bgp include 1
-check_state
-netq check bgp include 2
+#netq check bgp | grep -q "Failed Sessions: 0"
 check_state
 
 echo "netq check vxlan"
 netq check vxlan
-check_state
-netq check vxlan include 0
-check_state
-netq check vxlan include 1
+#netq check vxlan | grep -q "Failed Nodes: 0"
 check_state
 
 echo "netq check evpn"
 netq check evpn
-check_state
-netq check evpn include 0
-check_state
-netq check evpn include 1
-check_state
-netq check evpn include 2
-check_state
-netq check evpn include 3
-check_state
-netq check evpn include 4
-check_state
-netq check evpn include 5
-check_state
-netq check evpn include 6
-check_state
-netq check evpn include 7 
+#netq check evpn | grep -q "Failed Nodes: 0"
 check_state
 
-#Netq traces between some points in the topology
 
+#Netq traces between some points in the topology?
