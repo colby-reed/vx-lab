@@ -69,7 +69,7 @@ swp54  pass    spine04:swp1   spine04:swp1   spine04   swp1    fabric link  IfNa
 
 Clone the repo
 ```
-git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpncent.git
+git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpncent.git && cd ~/dc_configs_vxlan_evpnl2only/automation/
 ```
 
 Test ansible
@@ -79,7 +79,6 @@ ansible pod1 -i inventories/pod1 -m ping
 
 Run the ansible playbook to deploy the fabric
 ```
-cd ~/dc_configs_vxlan_evpnl2only/automation/
 ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
 ```
 
