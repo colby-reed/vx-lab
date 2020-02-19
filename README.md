@@ -69,7 +69,7 @@ swp54  pass    spine04:swp1   spine04:swp1   spine04   swp1    fabric link  IfNa
 
 Clone the repo
 ```
-git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpncent.git && cd ~/dc_configs_vxlan_evpnl2only/automation/
+git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd ~/dc_configs_vxlan_evpnsym/automation/
 ```
 
 Test ansible
