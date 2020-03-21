@@ -2,11 +2,11 @@
 stages:
   - lint
   - prep simulation environment
-  - build the simulation
-  - provision netq
-  - provision the simulation
-  - test the simulation
-  - cleanup the simulation
+  - oob-mgmt bringup
+  - network bringup
+  - provision simulation
+  - test simulation
+  - cleanup simulation
 
 lint:
   stage: lint
@@ -24,33 +24,52 @@ prep:
   only:
     - /^dev.*$/
 
-build:
-  stage: build the simulation
+build-oob-mgmt:
+  stage: oob-mgmt bringup
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./cldemo2/ci-common/bring-up-oob-mgmt.sh
   artifacts:
     expire_in: 1 week
     untracked: true
     paths:
       - simulation_$CI_PROJECT_NAME/
-  script:
-    - bash ./cldemo2/ci-common/bring-up-sim.sh
   only:
-    - /^dev.*$/
+    refs:
+      - /^dev.*/
+
+build-network:
+  stage: network bringup
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./cldemo2/ci-common/bring-up-network.sh
+  artifacts:
+    expire_in: 1 week
+    untracked: true
+    paths:
+      - simulation_$CI_PROJECT_NAME/
+  only:
+    refs:
+      - /^dev.*/
+  dependencies:
+    - build-oob-mgmt
 
 provision-netq:
-  stage: provision netq
+  stage: network bringup
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - bash ./cldemo2/ci-common/provision-opta.sh
   only:
-    - /^dev.*$/
+    refs:
+      - /^dev.*/
   dependencies:
-    - build
+    - build-oob-mgmt
 
 provision:
-  stage: provision the simulation
+  stage: provision simulation
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
@@ -58,21 +77,34 @@ provision:
   only:
     - /^dev.*$/
   dependencies:
-    - build
+    - build-network
 
-test:
-  stage: test the simulation
+test-from-oob-server:
+  stage: test simulation
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/test-sim-outside.sh
+    - bash ./cldemo2/ci-common/test-sim-outside-oob.sh
   only:
-    - /^dev.*$/
+    refs:
+      - /^dev.*/
   dependencies:
-    - build
+    - build-network
+
+test-from-netq-ts:
+  stage: test simulation
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - bash ./cldemo2/ci-common/test-sim-outside-netq.sh
+  only:
+    refs:
+      - /^dev.*/
+  dependencies:
+    - build-network
 
 cleanup:
-  stage: cleanup the simulation
+  stage: cleanup simulation
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
@@ -80,5 +112,4 @@ cleanup:
   only:
     - /^dev.*$/
   dependencies:
-    - build
-
+    - build-network
