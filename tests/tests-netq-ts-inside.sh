@@ -8,6 +8,9 @@ fi
 }
 set -x
 
+echo "60 seconds of NetQ agent + server processing time"
+sleep 60
+
 echo "netq show agents"
 netq show agents
 check_state
