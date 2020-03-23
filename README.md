@@ -347,7 +347,7 @@ vagrant destroy -f oob-mgm-server oob-mgmt-switch
 ### Git
 Clone repo with submodule
 ```
-git clone --recursive https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnl2only.git
+git clone --recursive https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git
 ```
 Fetch submodule
 ```
