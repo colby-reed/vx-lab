@@ -1,4 +1,3 @@
-
 ###############
 # L2VNIs
 ###############
@@ -33,8 +32,6 @@ iface vlan{{ vrfs[vrf] }}
     hwaddress 44:38:39:BE:EF:{{ '%02d' % devices[inventory_hostname].rack }}
     vlan-id {{ vrfs[vrf] }}
     vlan-raw-device bridge
-    ip-forward off
-    ip6-forward off
     vrf {{ vrf }}
 
 {% endfor %}
