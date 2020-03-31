@@ -1,6 +1,6 @@
 {{ ansible_managed }}
 agentAddress udp6:[::1]:161
-agentaddress {{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}%mgmt
+agentaddress {{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}@mgmt
 
 
 rocommunity     neteng
