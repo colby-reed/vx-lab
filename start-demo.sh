@@ -51,9 +51,14 @@ check_state
 echo "Copy Topology Automation to oob-mgmt-server"
 vagrant scp ../../automation oob-mgmt-server:/home/vagrant
 check_state
-
+echo "Finsihed automation copy into the simulation"
+echo ""
+ 
+echo ""
+echo "Displaying status of all devices under this Vagrant simulation"
+echo "netq-ts may not be running if you used the --no-netq option"
+echo ""
 vagrant status
-check_state
 
 echo ""
 echo "###########################"
@@ -61,5 +66,7 @@ echo "# Demo launch complete!   #"
 echo "###########################"
 echo ""
 echo "Change to cldemo2/simluation directory to vagrant ssh into the simulation:"
+echo ""
 echo "cd cldemo2/simluation"
 echo "vagrant ssh oob-mgmt-server"
+echo ""

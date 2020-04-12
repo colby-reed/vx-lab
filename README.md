@@ -69,7 +69,24 @@ swp54  pass    spine04:swp1   spine04:swp1   spine04   swp1    fabric link  IfNa
 
 Clone the repo
 ```
-git clone --recurse-submodules https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym/automation/
+git clone --recurse-submodules https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym
+```
+
+Run the start-demo.sh script. Pass in --no-netq to skip loading the 8GB mem 4 vcpu NetQ box. This step may take some time depending on the host machine.
+```
+./start-demo.sh && cldemo2/simulation
+OR
+./start-demo.sh --no-netq && cldemo2/simulation
+```
+
+Enter the simulation by using `vagrant ssh oob-mgmt-server` to SSH into the oob-mgmt-server (the jump host)
+```
+vagrant ssh oob-mgmt-server
+```
+
+Once inside the oob-mgmt-server, cd into the automation directory
+```
+cd automation
 ```
 
 Test ansible
@@ -77,7 +94,7 @@ Test ansible
 ansible pod1 -i inventories/pod1 -m ping
 ```
 
-Run the ansible playbook to deploy the fabric
+Run the ansible playbook to deploy the demo to the fabric
 ```
 ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
 ```
