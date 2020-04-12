@@ -102,17 +102,17 @@ Prerequisites:
 
 **Note: If you used the start-script.sh to start the simulation, the automation directory is already present on the oob-mgmt-server**
 
-Clone the repo
+1) Clone the repo
 ```
 git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym/automation
 ```
 
-Test ansible
+2) Test ansible
 ```
 ansible pod1 -i inventories/pod1 -m ping
 ```
 
-Run the ansible playbook to deploy the demo to the fabric
+3) Run the ansible playbook to deploy the demo to the fabric
 ```
 ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
 ```
