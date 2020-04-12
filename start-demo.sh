@@ -20,6 +20,8 @@ then
     check_state
     git submodule update
     check_state
+    cd ..
+    check_state
 else
     echo "Submodule folder not empty. Assuming it is ok"
 fi
