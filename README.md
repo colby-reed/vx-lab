@@ -74,9 +74,9 @@ git clone --recurse-submodules https://gitlab.com/cumulus-consulting/goldenturtl
 
 Run the start-demo.sh script. Pass in --no-netq to skip loading the 8GB mem 4 vcpu NetQ box. This step may take some time depending on the host machine.
 ```
-./start-demo.sh && cldemo2/simulation
+./start-demo.sh && cd cldemo2/simulation
 OR
-./start-demo.sh --no-netq && cldemo2/simulation
+./start-demo.sh --no-netq && cd cldemo2/simulation
 ```
 
 Enter the simulation by using `vagrant ssh oob-mgmt-server` to SSH into the oob-mgmt-server (the jump host)
