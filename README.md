@@ -7,6 +7,35 @@ This repository holds all the configurations for a standardized deployment using
 * EVPN symmetric mode control plane
 * Distributed gateway routing, with SVI as gateways living on border leafs
 
+## Quick Start
+
+1) Clone this repo
+```
+git clone --recurse-submodules https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym
+```
+
+2) Run the start-demo.sh script. Pass in --no-netq to skip loading the 8GB mem 4 vcpu NetQ box. This step may take some time depending on the host machine.
+```
+./start-demo.sh && cd cldemo2/simulation
+OR
+./start-demo.sh --no-netq && cd cldemo2/simulation
+```
+
+3) Enter the simulation by using `vagrant ssh oob-mgmt-server` to SSH into the oob-mgmt-server (the jump host)
+```
+vagrant ssh oob-mgmt-server
+```
+
+4) Once inside the oob-mgmt-server, cd into the automation directory
+```
+cd automation
+```
+
+5) Run the ansible playbook to deploy the demo to the fabric
+```
+ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
+```
+
 ## Demo architecture
 
 ### IPAM
@@ -67,17 +96,23 @@ swp54  pass    spine04:swp1   spine04:swp1   spine04   swp1    fabric link  IfNa
 
 ### Ansible
 
-Clone the repo
+Prerequisites:
+- Cumulus Linux Reference Topology (cldemo2) has already been started and is running
+- From a shell session on the oob-mgmt-server inside of the simulation
+
+**Note: If you used the start-script.sh to start the simulation, the automation directory is already present on the oob-mgmt-server**
+
+1) Clone the repo
 ```
-git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd ~/dc_configs_vxlan_evpnsym/automation/
+git clone https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym/automation
 ```
 
-Test ansible
+2) Test ansible
 ```
 ansible pod1 -i inventories/pod1 -m ping
 ```
 
-Run the ansible playbook to deploy the fabric
+3) Run the ansible playbook to deploy the demo to the fabric
 ```
 ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
 ```
