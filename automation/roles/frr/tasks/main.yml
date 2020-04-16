@@ -14,11 +14,4 @@
   notify:
     - reload frr
 
-- name: Sysctl 5-tuple hashing
-  sysctl:
-    name: net.ipv4.fib_multipath_hash_policy
-    value: 1
-    state: present
-    reload: yes
-
 - meta: flush_handlers
