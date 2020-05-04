@@ -9,7 +9,7 @@ function error() {
 
 trap error ERR
 
-cd /home/vagrant/automation
+cd /home/cumulus/automation
 
 # Enable Colored Output when Running Ansible in the CI pipeline
 export ANSIBLE_FORCE_COLOR=true
