@@ -94,7 +94,8 @@ netq check ntp include 0
 check_state
 
 echo "netq check vlan"
-netq check vlan include 0
+#leaving out border01, border02, fw1, fw2
+netq check vlan hostnames server01,server02,server03,server04,server05,server06,server07,server08,leaf01,leaf02,leaf03,leaf04,spine01,spine02,spine03,spine04 include 0
 check_state
 netq check vlan include 1
 check_state
