@@ -84,13 +84,13 @@ check_state
 echo "netq check mtu"
 #netq check mtu 0
 #check_state
-netq check mtu 1
+netq check mtu include 1
 check_state
-netq check mtu 2
+netq check mtu include 2
 check_state
 
 echo "netq check ntp"
-netq check ntp 0
+netq check ntp include 0
 check_state
 
 echo "netq check vlan"
