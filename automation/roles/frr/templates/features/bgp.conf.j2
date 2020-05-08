@@ -25,6 +25,7 @@ router bgp {{ racks[devices[inventory_hostname].rack].bgp.asn }}
  {% endif %}
  exit-address-family
 !
+{% if switch_role == 'border' %}
 {% for vrf in vrfs %}
 router bgp {{ racks[devices[inventory_hostname].rack].bgp.asn }} vrf {{ vrf }}
  bgp router-id {{ devices[inventory_hostname].loopback|ipaddr('address') }}
@@ -38,3 +39,4 @@ router bgp {{ racks[devices[inventory_hostname].rack].bgp.asn }} vrf {{ vrf }}
   advertise ipv4 unicast
  exit-address-family
 {% endfor %}
+{% endif %}
