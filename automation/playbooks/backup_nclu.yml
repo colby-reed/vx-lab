@@ -1,5 +1,5 @@
 ---
-- hosts: spine leaf
+- hosts: spine leaf border fw
   become: true
   gather_facts: false
   tasks:
