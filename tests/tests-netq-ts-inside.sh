@@ -31,8 +31,7 @@ netq check interfaces
 netq show interfaces
 
 echo "netq check mtu"
-netq show mtu
-netq check mtu include 0
+netq check mtu hostnames server01,server02,server03,server04,server05,server06,server07,server08,leaf01,leaf02,leaf03,leaf04,spine01,spine02,spine03,spine04 include 0
 netq check mtu include 1
 netq check mtu include 2
 
