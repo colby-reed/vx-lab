@@ -12,7 +12,7 @@ fi
 
 
 echo "Forced NetQ processing time after provisioning"
-sleep 120
+sleep 60
 
 echo "netq show agents"
 netq show agents
@@ -49,7 +49,8 @@ netq check clag include 2
 netq check clag include 3
 netq check clag include 4
 netq check clag include 5
-netq check clag include 6
+#see issue 7 in gitlab
+#netq check clag include 6
 netq check clag include 7
 netq check clag include 8
 netq check clag include 9
@@ -64,7 +65,8 @@ netq check bgp include 2
 echo "netq check vxlan"
 netq show vxlan
 netq check vxlan include 0
-netq check vxlan include 1
+#see issue 8 in gitlab
+#netq check vxlan include 1
 
 echo "netq check evpn"
 netq show evpn
