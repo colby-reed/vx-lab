@@ -73,7 +73,8 @@ netq show evpn
 netq check evpn include 0
 netq check evpn include 1
 #netq check evpn include 2
-netq check evpn include 3
+#see issue 9 in gitlab
+#netq check evpn include 3
 netq check evpn include 4
 netq check evpn include 5
 netq check evpn include 6
