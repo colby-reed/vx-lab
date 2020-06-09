@@ -83,7 +83,3 @@ netq check evpn include 7
 echo "netq check ntp"
 netq show ntp
 #netq check ntp include 0
-
-
-
-
