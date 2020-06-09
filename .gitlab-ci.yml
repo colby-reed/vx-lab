@@ -3,9 +3,10 @@ stages:
   - lint
   - prep simulation environment
   - oob-mgmt bringup
+  - setup inside runners
   - network bringup
   - provision simulation
-  - test simulation
+  - test the simulation
   - cleanup simulation
 
 lint:
@@ -16,6 +17,8 @@ lint:
     - bash ./cldemo2/ci-common/linter.sh
 
 prep:
+  before_script:
+    - PRIVATE_TOKEN="$API_KEY" gitlab-job-guard -c=^dev*
   stage: prep simulation environment
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
@@ -38,6 +41,33 @@ build-oob-mgmt:
   only:
     refs:
       - /^dev.*/
+    changes:
+      - automation/**/*
+      - tests/*
+      - .gitlab-ci.yml
+      - cldemo2
+
+setup-runner-on-netq-ts:
+  stage: setup inside runners
+  script:
+    - cd simulation_$CI_PROJECT_NAME
+    - vagrant ssh netq-ts -c "sudo gitlab-runner register --non-interactive --url https://gitlab.com --registration-token $RUNNER_REG_TOKEN --description netq-ts:$CI_JOB_ID --tag-list $CI_PROJECT_NAME:netq-ts --executor shell"
+  only:
+    refs:
+      - /^dev.*/
+  dependencies:
+    - build-oob-mgmt
+
+setup-runner-on-oob-mgmt-server:
+  stage: setup inside runners
+  script:
+    - cd simulation_$CI_PROJECT_NAME
+    - vagrant ssh oob-mgmt-server -c "sudo gitlab-runner register --non-interactive --url https://gitlab.com --registration-token $RUNNER_REG_TOKEN --description oob-mgmt-server:$CI_JOB_ID --tag-list $CI_PROJECT_NAME:oob-mgmt --executor shell"
+  only:
+    refs:
+      - /^dev.*/
+  dependencies:
+    - build-oob-mgmt
 
 build-network:
   stage: network bringup
@@ -67,41 +97,45 @@ provision-netq:
       - /^dev.*/
   dependencies:
     - build-oob-mgmt
+  tags:
+    - dc_configs_vxlan_evpnsym:netq-ts
 
 provision:
   stage: provision simulation
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - bash ./cldemo2/ci-common/provision-sim-outside.sh
+    - export ANSIBLE_FORCE_COLOR=true
+    - cd automation
+    - ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
   only:
     - /^dev.*$/
+  tags:
+    - dc_configs_vxlan_evpnsym:oob-mgmt
   dependencies:
     - build-network
 
 test-from-oob-server:
-  stage: test simulation
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
+  stage: test the simulation
   script:
-    - bash ./cldemo2/ci-common/test-sim-outside-oob.sh
+    - bash ./tests/oob-server-tests.sh
   only:
     refs:
       - /^dev.*/
   dependencies:
     - build-network
+  tags:
+    - dc_configs_vxlan_evpnsym:oob-mgmt
 
 test-from-netq-ts:
-  stage: test simulation
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
+  stage: test the simulation
   script:
-    - bash ./cldemo2/ci-common/test-sim-outside-netq.sh
+    - bash ./tests/netq-ts-tests.sh
   only:
     refs:
       - /^dev.*/
   dependencies:
     - build-network
+  tags:
+    - dc_configs_vxlan_evpnsym:netq-ts
 
 cleanup:
   stage: cleanup simulation
