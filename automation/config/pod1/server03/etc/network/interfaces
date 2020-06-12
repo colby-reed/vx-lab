@@ -23,7 +23,7 @@ auto uplink
 iface uplink inet static
   address 10.1.30.103
   netmask 255.255.255.0
-  mtu 9000
+  mtu 9216
   bond-slaves none
   bond-mode 802.3ad
   bond-miimon 100
