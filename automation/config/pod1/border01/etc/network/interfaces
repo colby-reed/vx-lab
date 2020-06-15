@@ -9,7 +9,7 @@ auto lo
 iface lo inet loopback
     address 10.10.10.63/32
     clagd-vxlan-anycast-ip 10.0.1.254
-	vxlan-local-tunnelip 10.10.10.63
+    vxlan-local-tunnelip 10.10.10.63
 
 ###############
 # Mgmt interface
@@ -98,7 +98,7 @@ iface L3VNI_RED
 
 auto vlan4001
 iface vlan4001
-    hwaddress 44:38:39:BE:EF:32
+    hwaddress 44:38:39:BE:EF:FF
     vlan-id 4001
     vlan-raw-device bridge
     vrf RED
@@ -114,7 +114,7 @@ iface L3VNI_BLUE
 
 auto vlan4002
 iface vlan4002
-    hwaddress 44:38:39:BE:EF:32
+    hwaddress 44:38:39:BE:EF:FF
     vlan-id 4002
     vlan-raw-device bridge
     vrf BLUE
@@ -162,7 +162,7 @@ iface peerlink.4094
     clagd-backup-ip 10.10.10.64
     clagd-peer-ip linklocal
     clagd-priority 1000
-    clagd-sys-mac 44:38:39:FF:01:FF
+    clagd-sys-mac 44:38:39:BE:EF:FF
 ###############
 # Bridge
 ###############
