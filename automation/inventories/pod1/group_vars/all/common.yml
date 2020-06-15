@@ -13,7 +13,7 @@ racks:
       asn: 65101
     clag:
       loopback: 10.0.1.1
-      sysmac: 44:38:39:FF:01:01
+      sysmac: 44:38:39:BE:EF:AA
       bonds:
         - interface: swp1
           access: 10
@@ -36,7 +36,7 @@ racks:
       asn: 65102
     clag:
       loopback: 10.0.1.2
-      sysmac: 44:38:39:FF:01:02
+      sysmac: 44:38:39:BE:EF:BB
       bonds:
         - interface: swp1
           access: 10
@@ -59,7 +59,7 @@ racks:
       asn: 65254
     clag:
       loopback: 10.0.1.254
-      sysmac: 44:38:39:FF:01:FF
+      sysmac: 44:38:39:BE:EF:FF
       bonds:
         - interface: swp3
           trunk:

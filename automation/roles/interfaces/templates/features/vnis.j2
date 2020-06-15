@@ -29,7 +29,7 @@ iface L3VNI_{{ vrf }}
 
 auto vlan{{ vrfs[vrf] }}
 iface vlan{{ vrfs[vrf] }}
-    hwaddress 44:38:39:BE:EF:{{ '%02d' % devices[inventory_hostname].rack }}
+    hwaddress {{ racks[devices[inventory_hostname].rack].clag.sysmac }}
     vlan-id {{ vrfs[vrf] }}
     vlan-raw-device bridge
     vrf {{ vrf }}
