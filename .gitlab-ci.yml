@@ -104,6 +104,8 @@ build-network:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - bash ./cldemo2/ci-common/bring-up-network.sh
+  after_script:
+    - sleep 60
   artifacts:
     expire_in: 1 week
     untracked: true
