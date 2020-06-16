@@ -3,7 +3,6 @@ stages:
   - lint
   - prep simulation environment
   - oob-mgmt bringup
-  - setup inside runners
   - network bringup
   - provision simulation
   - test the simulation
@@ -18,14 +17,35 @@ lint:
 
 prep:
   before_script:
-    - PRIVATE_TOKEN="$API_KEY" gitlab-job-guard -c=^dev*
+    - PRIVATE_TOKEN="$API_KEY" gitlab-job-guard -c="^(master|dev*)$"
   stage: prep simulation environment
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - bash ./cldemo2/ci-common/prep.sh
   only:
-    - /^dev.*$/
+    refs:
+      - /^dev.*/
+      - /^master$/
+
+tc-build:
+  stage: prep simulation environment
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  before_script:
+    - if [ -z $TUNNEL_IP ]; then TUNNEL_IP="127.0.0.1"; fi
+    - cp -r cldemo2/simulation simulation
+  script:
+    - cd simulation
+    - python3 topology_converter.py cldemo2.dot -p libvirt -cmd -i $TUNNEL_IP --prefix simulation_${CI_PROJECT_NAME}_
+  artifacts:
+    expire_in: 1 week
+    untracked: true
+    paths:
+      - simulation/
+  only:
+    refs:
+      - /^dev.*/
 
 build-oob-mgmt:
   stage: oob-mgmt bringup
@@ -37,7 +57,7 @@ build-oob-mgmt:
     expire_in: 1 week
     untracked: true
     paths:
-      - simulation_$CI_PROJECT_NAME/
+      - simulation/
   only:
     refs:
       - /^dev.*/
@@ -47,27 +67,36 @@ build-oob-mgmt:
       - .gitlab-ci.yml
       - cldemo2
 
-setup-runner-on-netq-ts:
-  stage: setup inside runners
+test-start-script:
+  stage: network bringup
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  before_script:
+    - ln -s cldemo2/simulation simulation
   script:
-    - cd simulation_$CI_PROJECT_NAME
-    - vagrant ssh netq-ts -c "sudo gitlab-runner register --non-interactive --url https://gitlab.com --registration-token $RUNNER_REG_TOKEN --description netq-ts:$CI_JOB_ID --tag-list $CI_PROJECT_NAME:netq-ts --executor shell"
+    - cd simulation
+    - python3 topology_converter.py cldemo2.dot -p libvirt -cmd --prefix simulation_${CI_PROJECT_NAME}_
+    - cd ..
+    - bash ./start-demo.sh
+  after_script:
+    - cd simulation
+    - vagrant ssh oob-mgmt-server -c "sudo gitlab-runner register --non-interactive --url https://gitlab.com --registration-token $RUNNER_REG_TOKEN --description oob-mgmt-server:$CI_JOB_ID --tag-list $CI_PROJECT_NAME:oob-mgmt --executor shell"
+    - sleep 60
+  artifacts:
+    expire_in: 1 week
+    untracked: true
   only:
     refs:
-      - /^dev.*/
-  dependencies:
-    - build-oob-mgmt
+      - /^master$/
 
 setup-runner-on-oob-mgmt-server:
-  stage: setup inside runners
+  stage: network bringup
   script:
-    - cd simulation_$CI_PROJECT_NAME
+    - cd simulation
     - vagrant ssh oob-mgmt-server -c "sudo gitlab-runner register --non-interactive --url https://gitlab.com --registration-token $RUNNER_REG_TOKEN --description oob-mgmt-server:$CI_JOB_ID --tag-list $CI_PROJECT_NAME:oob-mgmt --executor shell"
   only:
     refs:
       - /^dev.*/
-  dependencies:
-    - build-oob-mgmt
 
 build-network:
   stage: network bringup
@@ -79,39 +108,34 @@ build-network:
     expire_in: 1 week
     untracked: true
     paths:
-      - simulation_$CI_PROJECT_NAME/
+      - simulation/
   only:
     refs:
       - /^dev.*/
-  dependencies:
-    - build-oob-mgmt
-
-provision-netq:
-  stage: network bringup
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
-  script:
-    - bash ./cldemo2/ci-common/provision-opta.sh
-  only:
-    refs:
-      - /^dev.*/
-  dependencies:
-    - build-oob-mgmt
-  tags:
-    - dc_configs_vxlan_evpnsym:netq-ts
 
 provision:
   stage: provision simulation
   script:
-    - export ANSIBLE_FORCE_COLOR=true
     - cd automation
     - ansible-playbook playbooks/deploy.yml -i inventories/pod1 --diff
   only:
-    - /^dev.*$/
+    refs:
+      - /^dev.*/
+      - /^master$/
   tags:
     - dc_configs_vxlan_evpnsym:oob-mgmt
-  dependencies:
-    - build-network
+
+configure-netq-agents:
+  stage: provision simulation
+  script:
+    - ansible server*:localhost -a "netq config add agent server $OPTA_SERVER_IP"
+    - ansible leaf:spine:exit -a "netq config add agent server $OPTA_SERVER_IP vrf mgmt"
+    - ansible exit:leaf:spine:server*:localhost -a "netq config restart agent"
+  only:
+    refs:
+      - /^dev.*/
+  tags:
+    - dc_configs_vxlan_evpnsym:oob-mgmt
 
 test-from-oob-server:
   stage: test the simulation
@@ -120,8 +144,6 @@ test-from-oob-server:
   only:
     refs:
       - /^dev.*/
-  dependencies:
-    - build-network
   tags:
     - dc_configs_vxlan_evpnsym:oob-mgmt
 
@@ -132,8 +154,6 @@ test-from-netq-ts:
   only:
     refs:
       - /^dev.*/
-  dependencies:
-    - build-network
   tags:
     - dc_configs_vxlan_evpnsym:netq-ts
 
@@ -145,5 +165,4 @@ cleanup:
     - bash ./cldemo2/ci-common/cleanup.sh
   only:
     - /^dev.*$/
-  dependencies:
-    - build-network
+    - /^master$/
