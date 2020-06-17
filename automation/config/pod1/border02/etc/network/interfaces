@@ -9,7 +9,8 @@ auto lo
 iface lo inet loopback
     address 10.10.10.64/32
     clagd-vxlan-anycast-ip 10.0.1.254
-	vxlan-local-tunnelip 10.10.10.64
+    vxlan-local-tunnelip 10.10.10.64
+
 ###############
 # Mgmt interface
 ###############
@@ -18,6 +19,7 @@ auto mgmt
 iface mgmt
     vrf-table auto
     address 127.0.0.1/8
+    address ::1/128
 
 auto eth0
 iface eth0 inet dhcp
@@ -49,7 +51,6 @@ iface bond3
 auto swp3
 iface swp3
     alias bond member of bond3
-
 
 ###############
 # L2VNIs
@@ -97,11 +98,9 @@ iface L3VNI_RED
 
 auto vlan4001
 iface vlan4001
-    hwaddress 44:38:39:00:00:32
+    hwaddress 44:38:39:BE:EF:FF
     vlan-id 4001
     vlan-raw-device bridge
-    ip-forward off
-    ip6-forward off
     vrf RED
 
 auto L3VNI_BLUE
@@ -115,11 +114,9 @@ iface L3VNI_BLUE
 
 auto vlan4002
 iface vlan4002
-    hwaddress 44:38:39:00:00:32
+    hwaddress 44:38:39:BE:EF:FF
     vlan-id 4002
     vlan-raw-device bridge
-    ip-forward off
-    ip6-forward off
     vrf BLUE
 
 
@@ -165,7 +162,7 @@ iface peerlink.4094
     clagd-backup-ip 10.10.10.63
     clagd-peer-ip linklocal
     clagd-priority 32768
-    clagd-sys-mac 44:38:39:FF:FF:FF
+    clagd-sys-mac 44:38:39:BE:EF:FF
 ###############
 # Bridge
 ###############
@@ -193,6 +190,13 @@ auto vlan20
 iface vlan20
     address 10.1.20.3/24
     address-virtual 00:00:00:00:00:1b 10.1.20.1/24
-    vrf BLUE
+    vrf RED
     vlan-raw-device bridge
     vlan-id 20
+auto vlan30
+iface vlan30
+    address 10.1.30.3/24
+    address-virtual 00:00:00:00:00:1c 10.1.30.1/24
+    vrf BLUE
+    vlan-raw-device bridge
+    vlan-id 30
