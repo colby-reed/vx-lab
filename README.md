@@ -11,7 +11,7 @@ This repository holds all the configurations for a standardized deployment using
 
 1) Clone this repo
 ```
-git clone --recurse-submodules https://gitlab.com/cumulus-consulting/goldenturtle/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym
+git clone --recurse-submodules https://gitlab.com/colby-reed/vx-lab/dc_configs_vxlan_evpnsym.git && cd dc_configs_vxlan_evpnsym
 ```
 
 2) Run the start-demo.sh script. Pass in --no-netq to skip loading the 8GB mem 4 vcpu NetQ box. This step may take some time depending on the host machine.
